@@ -10,12 +10,14 @@ import './styles/main.scss';
 interface AppState {
   breeds: Breed[];
   loading: boolean;
+  forceError: boolean;
 }
 
 class App extends Component<Record<string, never>, AppState> {
   state: AppState = {
     breeds: [],
     loading: false,
+    forceError: false,
   };
 
   async componentDidMount() {
@@ -38,12 +40,22 @@ class App extends Component<Record<string, never>, AppState> {
     }, 500);
   };
 
+  triggerError = () => {
+    this.setState({ forceError: true });
+  };
+
   render(): React.ReactNode {
-    const { loading, breeds } = this.state;
+    const { loading, breeds, forceError } = this.state;
+
+    if (forceError) throw new Error('Error is tested!');
+
     return (
       <div className="app-layout">
         <SearchForm onSearch={this.handleSearch} />
         {loading ? <Loader /> : <BreedList breeds={breeds} />}
+        <button className="error-button" onClick={this.triggerError}>
+          🐾 Trigger Error
+        </button>
       </div>
     );
   }
