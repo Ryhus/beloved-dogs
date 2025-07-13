@@ -51,6 +51,11 @@ class App extends Component<Record<string, never>, AppState> {
 
     return (
       <div className="app-layout">
+        <h1 className="search-hint">
+          Looking for your favorite dog breed? 🐶
+          <br />
+          Try searching for <em>Beagle</em> or <em>Labrador!</em>
+        </h1>
         <SearchForm onSearch={this.handleSearch} />
         {loading ? <Loader /> : <BreedList breeds={breeds} />}
         <button className="error-button" onClick={this.triggerError}>

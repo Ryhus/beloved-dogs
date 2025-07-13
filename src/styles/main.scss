@@ -7,6 +7,19 @@
   gap: 30px;
   margin-top: 50px;
 
+  .search-hint {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #444;
+
+    em {
+      color: #d17b0f;
+      font-style: normal;
+      font-weight: 600;
+    }
+  }
+
   .error-button {
     position: fixed;
     bottom: 20px;
