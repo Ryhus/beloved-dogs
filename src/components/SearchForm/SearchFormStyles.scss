@@ -1,69 +1,62 @@
 .search-bar {
   display: flex;
   align-items: center;
-  justify-self: center;
+  width: 100%;
+  max-width: 746px;
   padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 9999px;
-  width: 746px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.85);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+  box-sizing: border-box;
+
+  &:focus-within {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+  }
 
   input {
     flex: 1;
     border: none;
     outline: none;
     font-size: 1rem;
+    padding: 0.6rem 1rem;
     background: transparent;
-    margin-left: 10px;
+    color: #333;
+    min-width: 0;
   }
 
   .clear-btn {
     background: none;
     border: none;
-    color: #888;
+    color: #bbb;
     cursor: pointer;
-    margin-right: 0.5rem;
     font-size: 1.2rem;
+    transition: color 0.2s ease;
 
     &:hover {
-      color: #333;
+      color: #555;
     }
   }
 
   .submit-btn {
-    background: #007bff;
+    background: linear-gradient(135deg, #6c63ff, #42a5f5);
     color: #fff;
     border: none;
-    padding: 0.4rem 1rem;
+    padding: 0.5rem 1.4rem;
     border-radius: 9999px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    transition: background 0.3s ease;
 
     &:hover {
-      background: #0056b3;
+      background: linear-gradient(135deg, #5a54d1, #1e88e5);
     }
-  }
-  .error-message {
-    color: #e74c3c;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-}
-
-@media (max-width: 804px) {
-  .search-bar {
-    width: 561px;
-  }
-}
-
-@media (max-width: 672px) {
-  .search-bar {
-    width: 449px;
-  }
-}
-
-@media (max-width: 560px) {
-  .search-bar {
-    width: 337px;
   }
 }
