@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SearchForm from './components/SearchForm/SearchForm';
 import BreedList from './components/BreedList/BreedList';
 import PopUpMessage from './components/PopUpMessage/PopUpMessage';
-import NoResultsPlaceholder from './components/NoResultsPlaceholder/NoResultsPlaceHolder';
+import NoResultsPlaceholder from './components/NoResultsPlaceholder/NoResultsPlaceholder';
 import { getAllBreeds } from './Services/DogService/DogService';
 import Loader from './components/Loader/Loader';
 import type { Breed } from './Services/DogService/types';
