@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SearchForm from './components/SearchForm/SearchForm';
 import BreedList from './components/BreedList/BreedList';
 import PopUpMessage from './components/PopUpMessage/PopUpMessage';
+import NoResultsPlaceholder from './components/NoResultsPlaceholder/NoResultsPlaceHolder';
 import { getAllBreeds } from './Services/DogService/DogService';
 import Loader from './components/Loader/Loader';
 import type { Breed } from './Services/DogService/types';
@@ -63,7 +64,13 @@ class App extends Component<Record<string, never>, AppState> {
           Try searching for <em>Beagle</em> or <em>Labrador!</em>
         </h1>
         <SearchForm onSearch={this.handleSearch} />
-        {loading ? <Loader /> : <BreedList breeds={breeds} />}
+        {loading ? (
+          <Loader />
+        ) : breeds.length === 0 ? (
+          <NoResultsPlaceholder />
+        ) : (
+          <BreedList breeds={breeds} />
+        )}
         <button className="error-button" onClick={this.triggerError}>
           🐾 Trigger Error
         </button>
