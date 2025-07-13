@@ -3,6 +3,7 @@ import {
   searchBreeds,
   getAllBreeds,
 } from '../../Services/DogService/DogService';
+
 import type { Breed } from '../../Services/DogService/types';
 import type { FormEvent, ChangeEvent } from 'react';
 
@@ -18,13 +19,21 @@ interface SearchFormProps {
 }
 
 class SearchForm extends Component<SearchFormProps, SearchFormState> {
-  state: SearchFormState = {
-    input: '',
-    error: '',
-  };
+  constructor(props: SearchFormProps) {
+    super(props);
+
+    const lastTerm = localStorage.getItem('lastSearchTerm') || '';
+
+    this.state = {
+      input: lastTerm,
+      error: '',
+    };
+  }
 
   handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
     this.setState({ input: e.target.value, error: '' });
+    localStorage.setItem('lastSearchTerm', newValue);
   };
 
   handleSubmit = async (e: FormEvent) => {
