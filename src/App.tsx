@@ -3,7 +3,7 @@ import SearchForm from './components/SearchForm/SearchForm';
 import BreedList from './components/BreedList/BreedList';
 import PopUpMessage from './components/PopUpMessage/PopUpMessage';
 import NoResultsPlaceholder from './components/NoResultsPlaceholder/NoResultsPlaceholder';
-import { getAllBreeds } from './Services/DogService/DogService';
+import { getAllBreeds, searchBreeds } from './Services/DogService/DogService';
 import Loader from './components/Loader/Loader';
 import type { Breed } from './Services/DogService/types';
 
@@ -27,9 +27,16 @@ class App extends Component<Record<string, never>, AppState> {
   async componentDidMount() {
     this.setState({ loading: true });
 
+    const savedBreed = localStorage.getItem('lastSearchTerm');
+
     try {
-      const breeds = await getAllBreeds();
-      this.setState({ breeds });
+      if (savedBreed) {
+        const breeds = await searchBreeds(savedBreed);
+        this.setState({ breeds });
+      } else {
+        const breeds = await getAllBreeds();
+        this.setState({ breeds });
+      }
     } catch (error) {
       console.error('Failed to fetch breeds on load', error);
       this.setState({
