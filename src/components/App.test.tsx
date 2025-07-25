@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import * as DogService from '../Services/DogService/DogService';
 
 import App from '../App';
-import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
+
 import type { Breed } from '../Services/DogService/types';
 
 vi.mock('../Services/DogService/DogService');
@@ -104,21 +104,6 @@ describe('App Component Integration Tests', () => {
         screen.getByRole('heading', { name: /beagle/i })
       ).toBeInTheDocument();
     });
-  });
-
-  it('trigger error button throws error', async () => {
-    render(
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    );
-
-    const errorButton = screen.getByRole('button', { name: /trigger error/i });
-    await userEvent.click(errorButton);
-
-    expect(screen.getByText(/oops! something went wrong/i)).toBeInTheDocument();
-
-    expect(screen.getByRole('button', { name: /reload/i })).toBeInTheDocument();
   });
 
   it('displays NoResultsPlaceholder when search returns no breeds', async () => {

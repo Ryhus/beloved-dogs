@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import SearchForm from './components/SearchForm/SearchForm';
 import BreedList from './components/BreedList/BreedList';
 import PopUpMessage from './components/PopUpMessage/PopUpMessage';
@@ -9,87 +9,61 @@ import type { Breed } from './Services/DogService/types';
 
 import './styles/main.scss';
 
-interface AppState {
-  breeds: Breed[];
-  loading: boolean;
-  forceError: boolean;
-  error: string;
-}
+function App() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [breeds, setBreeds] = useState<Breed[]>([]);
 
-class App extends Component<Record<string, never>, AppState> {
-  state: AppState = {
-    breeds: [],
-    loading: false,
-    forceError: false,
-    error: '',
-  };
+  useEffect(() => {
+    const fetchBreeds = async () => {
+      setLoading(true);
+      const savedBreed = localStorage.getItem('lastSearchTerm');
 
-  async componentDidMount() {
-    this.setState({ loading: true });
-
-    const savedBreed = localStorage.getItem('lastSearchTerm');
-
-    try {
-      if (savedBreed) {
-        const breeds = await searchBreeds(savedBreed);
-        this.setState({ breeds });
-      } else {
-        const breeds = await getAllBreeds();
-        this.setState({ breeds });
+      try {
+        if (savedBreed) {
+          const breeds = await searchBreeds(savedBreed);
+          setBreeds(breeds);
+        } else {
+          const breeds = await getAllBreeds();
+          setBreeds(breeds);
+        }
+      } catch (err) {
+        console.error('Failed to fetch breeds on load', err);
+        setError('Failed to load dog breeds. Please try again later.');
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to fetch breeds on load', error);
-      this.setState({
-        error: 'Failed to load dog breeds. Please try again later.',
-      });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
+    };
 
-  handleSearch = async (breeds: Breed[]) => {
-    this.setState({ loading: true });
+    fetchBreeds();
+  }, []);
+
+  const handleSearch = async (breeds: Breed[]) => {
+    setLoading(true);
     setTimeout(() => {
-      this.setState({ breeds, loading: false });
+      setBreeds(breeds);
+      setLoading(false);
     }, 500);
   };
 
-  triggerError = () => {
-    this.setState({ forceError: true });
-  };
-
-  render(): React.ReactNode {
-    const { loading, breeds, forceError, error } = this.state;
-
-    if (forceError) throw new Error('Error is tested!');
-
-    return (
-      <div className="app-layout">
-        <h1 className="search-hint">
-          Looking for your favorite dog breed? 🐶
-          <br />
-          Try searching for <em>Beagle</em> or <em>Labrador!</em>
-        </h1>
-        <SearchForm onSearch={this.handleSearch} />
-        {loading ? (
-          <Loader />
-        ) : breeds.length === 0 ? (
-          <NoResultsPlaceholder />
-        ) : (
-          <BreedList breeds={breeds} />
-        )}
-        <button className="error-button" onClick={this.triggerError}>
-          🐾 Trigger Error
-        </button>
-        {error && (
-          <PopUpMessage
-            message={error}
-            onClose={() => this.setState({ error: '' })}
-          />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div className="app-layout">
+      <h1 className="search-hint">
+        Looking for your favorite dog breed? 🐶
+        <br />
+        Try searching for <em>Beagle</em> or <em>Labrador!</em>
+      </h1>
+      <SearchForm onSearch={handleSearch} />
+      {loading ? (
+        <Loader />
+      ) : breeds?.length === 0 ? (
+        <NoResultsPlaceholder />
+      ) : (
+        <BreedList breeds={breeds} />
+      )}
+      {error && <PopUpMessage message={error} onClose={() => setError('')} />}
+    </div>
+  );
 }
 
 export default App;
