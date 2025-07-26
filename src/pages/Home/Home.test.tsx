@@ -1,13 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import * as DogService from '../Services/DogService/DogService';
+import * as DogService from '../../Services/DogService/DogService';
 
-import App from '../App';
+import Home from './Home';
 
-import type { Breed } from '../Services/DogService/types';
+import type { Breed } from '../../Services/DogService/types';
 
-vi.mock('../Services/DogService/DogService');
+vi.mock('../../Services/DogService/DogService');
 
 const mockedGetAllBreeds = DogService.getAllBreeds as Mock;
 const mockedSearchBreeds = DogService.searchBreeds as Mock;
@@ -34,7 +34,7 @@ describe('App Component Integration Tests', () => {
   it('makes initial API call on mount with no saved search term', async () => {
     mockedGetAllBreeds.mockResolvedValueOnce(mockBreeds);
 
-    render(<App />);
+    render(<Home />);
 
     expect(mockedGetAllBreeds).toHaveBeenCalledTimes(1);
 
@@ -53,7 +53,7 @@ describe('App Component Integration Tests', () => {
     localStorage.setItem('lastSearchTerm', 'beagle');
     mockedSearchBreeds.mockResolvedValueOnce(mockBreeds);
 
-    render(<App />);
+    render(<Home />);
 
     expect(mockedSearchBreeds).toHaveBeenCalledWith('beagle');
 
@@ -67,7 +67,7 @@ describe('App Component Integration Tests', () => {
   it('handles API error on mount', async () => {
     mockedGetAllBreeds.mockRejectedValueOnce(new Error('API Failure'));
 
-    render(<App />);
+    render(<Home />);
 
     await waitFor(() => {
       expect(
@@ -80,7 +80,7 @@ describe('App Component Integration Tests', () => {
     mockedGetAllBreeds.mockResolvedValueOnce(mockBreeds);
     mockedSearchBreeds.mockResolvedValueOnce([mockBreeds[0]]);
 
-    render(<App />);
+    render(<Home />);
 
     await waitFor(() => {
       expect(
@@ -109,7 +109,7 @@ describe('App Component Integration Tests', () => {
   it('displays NoResultsPlaceholder when search returns no breeds', async () => {
     mockedGetAllBreeds.mockResolvedValueOnce([]);
 
-    render(<App />);
+    render(<Home />);
 
     await waitFor(() => {
       expect(screen.getByText(/No dogs found 😞/i)).toBeInTheDocument();
