@@ -17,7 +17,7 @@ describe('BreeCard', () => {
   };
 
   it('renders the img and the name of the breed', () => {
-    render(<BreedCard breed={mockBreedData} />);
+    render(<BreedCard breed={mockBreedData} onClick={() => {}} />);
 
     const breedImg = screen.getByRole('img');
     const breedNameHeading = screen.getByRole('heading', { level: 2 });
