@@ -1,6 +1,6 @@
 import apiClient from './apiClient';
 
-import type { SearchBreedResponse, Breed } from './types';
+import type { SearchBreedResponse, BreedInfo } from './types';
 
 export async function getAllBreeds(limit: number = 10, page: number = 0) {
   const response = await apiClient.get<SearchBreedResponse>(`/breeds`, {
@@ -17,8 +17,6 @@ export async function searchBreeds(q: string) {
 }
 
 export async function getBreedById(breedId: string) {
-  const response = await apiClient.get<Breed>(`/breeds/`, {
-    params: { breedId },
-  });
+  const response = await apiClient.get<BreedInfo>(`/breeds/` + breedId);
   return response.data;
 }
