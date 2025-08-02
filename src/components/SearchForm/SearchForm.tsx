@@ -24,7 +24,7 @@ function SearchForm() {
       <span>🔍</span>
       <input type="text" name="breed" value={query} onChange={handleChange} />
       <button type="button" className="clear-btn" onClick={handleClear}>
-        ✖
+        &times;
       </button>
       <button type="submit" className="submit-btn">
         Search

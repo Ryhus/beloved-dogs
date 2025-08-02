@@ -73,7 +73,7 @@ function Home() {
       {detailId && (
         <div className="detail-panel">
           <button className="close-btn" onClick={handleCloseDetails}>
-            ✖
+            &times;
           </button>
           <Outlet />
         </div>
