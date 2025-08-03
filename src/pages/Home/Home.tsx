@@ -9,15 +9,16 @@ import SearchForm from '../../components/SearchForm/SearchForm';
 import BreedList from '../../components/BreedList/BreedList';
 import Pagination from '../../components/Pagination/Pagination';
 import NoResultsPlaceholder from '../../components/NoResultsPlaceholder/NoResultsPlaceholder';
+import Loader from '../../components/Loader/Loader';
 import Flyout from '@/components/Flyout/Flyout';
 
 import { type AllBreedsLoaderData } from '../../routes/DataHandlers/Home/HomeLoaders';
 
 import './HomeStyles.scss';
-import Loader from '../../components/Loader/Loader';
 
 function Home() {
   const data = useLoaderData<AllBreedsLoaderData>();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const navigation = useNavigation();
@@ -50,7 +51,7 @@ function Home() {
           Try searching for <em>Beagle</em> or <em>Labrador!</em>
         </h1>
         <SearchForm />
-        {isLoading ? (
+        {isLoading && !detailId ? (
           <Loader />
         ) : (
           <>
@@ -72,10 +73,16 @@ function Home() {
 
       {detailId && (
         <div className="detail-panel">
-          <button className="close-btn" onClick={handleCloseDetails}>
-            &times;
-          </button>
-          <Outlet />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <button className="close-btn" onClick={handleCloseDetails}>
+                &times;
+              </button>
+              <Outlet />
+            </>
+          )}
         </div>
       )}
     </div>

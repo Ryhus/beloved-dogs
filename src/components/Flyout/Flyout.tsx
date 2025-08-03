@@ -31,7 +31,7 @@ function Flyout() {
 
   return (
     <div className="flyout">
-      <span>{breedList.length} item(s) selected</span>
+      <span>{breedList.length}</span>
       <button onClick={clearSelection}>Unselect all</button>
       <button onClick={handleDownload}>Download</button>
     </div>
