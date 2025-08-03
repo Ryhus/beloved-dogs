@@ -1,6 +1,6 @@
 import { useSelectionStore } from '@/stores/selectionStore';
 
-import type { BreedInfo } from '../../Services/DogService/types';
+import type { BreedInfo } from '@/Services/DogService/types';
 
 import './BreedCardStyles.scss';
 

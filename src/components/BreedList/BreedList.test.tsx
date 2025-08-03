@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import BreedList from './BreedList';
-import type { BreedInfo } from '../../Services/DogService/types';
+import type { BreedInfo } from '@/Services/DogService/types';
 
 const mockBreedsArray: BreedInfo[] = [
   {

@@ -1,8 +1,8 @@
 import { type ChangeEvent, useState } from 'react';
 import { Form } from 'react-router-dom';
 
-import PopUpMessage from '../PopUpMessage/PopUpMessage';
-import { usePersistedSearchQuery } from '../../hooks/usePersistentSearchQuery';
+import { PopUpMessage } from '@/components';
+import { usePersistedSearchQuery } from '@/hooks/usePersistentSearchQuery';
 
 import './SearchFormStyles.scss';
 

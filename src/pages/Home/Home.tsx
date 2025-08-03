@@ -5,12 +5,14 @@ import {
   Outlet,
 } from 'react-router-dom';
 
-import SearchForm from '../../components/SearchForm/SearchForm';
-import BreedList from '../../components/BreedList/BreedList';
-import Pagination from '../../components/Pagination/Pagination';
-import NoResultsPlaceholder from '../../components/NoResultsPlaceholder/NoResultsPlaceholder';
-import Loader from '../../components/Loader/Loader';
-import Flyout from '@/components/Flyout/Flyout';
+import {
+  SearchForm,
+  BreedList,
+  Pagination,
+  NoResultsPlaceholder,
+  Loader,
+  Flyout,
+} from '@/components';
 
 import { type AllBreedsLoaderData } from '../../routes/DataHandlers/Home/HomeLoaders';
 

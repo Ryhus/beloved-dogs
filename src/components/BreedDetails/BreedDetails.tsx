@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 
-import type { BreedInfo } from '../../Services/DogService/types';
+import type { BreedInfo } from '@/Services/DogService/types';
 
 import './BreedDetailsStyles.scss';
 

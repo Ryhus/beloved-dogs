@@ -1,5 +1,5 @@
-import BreedCard from '../BreedCard/BreedCard';
-import type { BreedInfo } from '../../Services/DogService/types';
+import { BreedCard } from '@/components';
+import type { BreedInfo } from '@/Services/DogService/types';
 
 import './BreedListStyles.scss';
 

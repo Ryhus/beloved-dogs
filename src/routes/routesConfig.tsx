@@ -1,10 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import MainLayout from '../Layouts/MainLayout/MainLayout';
-import Home from '../pages/Home/Home';
-import PageNotFound from '../pages/PageNotFound.tsx/PageNotFound';
-import About from '../pages/About/About';
-import BreedDetails from '../components/BreedDetails/BreedDetails';
+import { Home, PageNotFound, About } from '@/pages';
+
+import MainLayout from '@/Layouts/MainLayout/MainLayout';
+
+import { BreedDetails } from '@/components';
 
 import {
   allBreedsLoader,
