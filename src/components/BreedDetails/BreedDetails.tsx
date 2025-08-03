@@ -7,6 +7,10 @@ import './BreedDetailsStyles.scss';
 function BreedDetails() {
   const breed = useLoaderData<BreedInfo>();
 
+  if (!breed) {
+    return <div>Breed not found</div>;
+  }
+
   return (
     <div className="breed-details">
       {breed?.reference_image_id && (
