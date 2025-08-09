@@ -1,9 +1,4 @@
-import {
-  useLoaderData,
-  useNavigation,
-  useSearchParams,
-  Outlet,
-} from 'react-router-dom';
+import { useSearchParams, Outlet } from 'react-router-dom';
 
 import {
   SearchForm,
@@ -12,22 +7,32 @@ import {
   NoResultsPlaceholder,
   Loader,
   Flyout,
+  ErrorComponent,
 } from '@/components';
 
-import { type AllBreedsLoaderData } from '../../routes/DataHandlers/Home/HomeLoaders';
+import { useBreeds, useInvalidateBreeds } from '@/hooks/queries/dogQueries';
 
 import './HomeStyles.scss';
 
 function Home() {
-  const data = useLoaderData<AllBreedsLoaderData>();
-
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const navigation = useNavigation();
-
-  const isLoading = navigation.state === 'loading';
-
   const detailId = searchParams.get('details');
+  const page = Number(searchParams.get('page') || 1) - 1;
+  const searchTerm =
+    searchParams.get('breed') || localStorage.getItem('lastSearchTerm') || '';
+
+  const {
+    data: breeds = [],
+    isLoading,
+    isError,
+    error,
+    isFetching,
+    refetch,
+  } = useBreeds(page, searchTerm);
+
+  const invalidateBreeds = useInvalidateBreeds();
+  console.log(isFetching);
 
   const handleCardClick = (breedId: number) => {
     searchParams.append('details', breedId.toString());
@@ -53,19 +58,28 @@ function Home() {
           Try searching for <em>Beagle</em> or <em>Labrador!</em>
         </h1>
         <SearchForm />
-        {isLoading && !detailId ? (
+
+        {isFetching && !isLoading ? (
           <Loader />
         ) : (
+          <button onClick={invalidateBreeds} className="refresh-btn">
+            🔄 Refresh
+          </button>
+        )}
+
+        {isLoading && !detailId && <Loader />}
+        {isError && <ErrorComponent error={error as Error} onRetry={refetch} />}
+        {!isLoading && !isError && (
           <>
-            {data.breeds.length === 0 ? (
+            {breeds.length === 0 ? (
               <NoResultsPlaceholder />
             ) : (
-              <BreedList breeds={data.breeds} onCardClick={handleCardClick} />
+              <BreedList breeds={breeds} onCardClick={handleCardClick} />
             )}
-            {!data.isSearch && (
+            {!searchTerm && (
               <Pagination
-                itemsOnCurrentPage={data.breeds.length}
-                currentPage={data.currentPage}
+                itemsOnCurrentPage={breeds.length}
+                currentPage={page}
               />
             )}
           </>

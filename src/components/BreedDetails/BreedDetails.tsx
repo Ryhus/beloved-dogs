@@ -1,12 +1,25 @@
-import { useLoaderData } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useBreedDetails } from '@/hooks/queries/dogQueries';
 
-import type { BreedInfo } from '@/Services/DogService/types';
+import { Loader, ErrorComponent } from '@/components';
 
 import './BreedDetailsStyles.scss';
 
 function BreedDetails() {
-  const breed = useLoaderData<BreedInfo>();
+  const [searchParams] = useSearchParams();
+  const breedId = searchParams.get('details');
 
+  const {
+    data: breed,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useBreedDetails(breedId);
+
+  if (isLoading) return <Loader />;
+  if (isError)
+    return <ErrorComponent error={error as Error} onRetry={refetch} />;
   if (!breed) {
     return <div>Breed not found</div>;
   }
