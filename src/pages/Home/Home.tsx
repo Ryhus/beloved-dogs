@@ -59,13 +59,13 @@ function Home() {
         </h1>
         <SearchForm />
 
-        {isFetching && !isLoading ? (
-          <Loader />
-        ) : (
-          <button onClick={invalidateBreeds} className="refresh-btn">
-            🔄 Refresh
-          </button>
-        )}
+        <button onClick={invalidateBreeds} className="refresh-btn">
+          {isFetching && !isLoading ? (
+            <span className="spinner" />
+          ) : (
+            '🔄 Refresh'
+          )}
+        </button>
 
         {isLoading && !detailId && <Loader />}
         {isError && <ErrorComponent error={error as Error} onRetry={refetch} />}
