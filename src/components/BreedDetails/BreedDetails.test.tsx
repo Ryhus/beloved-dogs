@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import * as ReactRouterDom from 'react-router-dom';
+import * as DogQueries from '@/hooks/queries/dogQueries';
 import BreedDetails from './BreedDetails';
 
 const mockBreed = {
   id: '1',
   name: 'Corgi',
   reference_image_id: 'abc123',
+  bred_for: 'Herding livestock',
   breed_group: 'Herding',
   life_span: '12 - 14 years',
   temperament: 'Alert, Affectionate, Smart',
@@ -21,26 +23,43 @@ vi.mock('react-router-dom', async () => {
     );
   return {
     ...actual,
-    useLoaderData: vi.fn(),
+    useSearchParams: vi.fn(),
   };
 });
+
+vi.mock('@/hooks/queries/dogQueries', () => ({
+  useBreedDetails: vi.fn(),
+}));
 
 describe('BreedDetails', () => {
   beforeEach(() => {
     (
-      ReactRouterDom.useLoaderData as unknown as ReturnType<typeof vi.fn>
+      ReactRouterDom.useSearchParams as unknown as ReturnType<typeof vi.fn>
     ).mockReset();
+    (
+      DogQueries.useBreedDetails as unknown as ReturnType<typeof vi.fn>
+    ).mockReset();
+
+    (
+      ReactRouterDom.useSearchParams as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue([new URLSearchParams({ details: mockBreed.id })]);
   });
 
-  it('renders breed details when useLoaderData returns data', () => {
+  it('renders breed details when data is available', () => {
     (
-      ReactRouterDom.useLoaderData as unknown as ReturnType<typeof vi.fn>
-    ).mockReturnValue(mockBreed);
+      DogQueries.useBreedDetails as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue({
+      data: mockBreed,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
 
     render(<BreedDetails />);
 
     expect(screen.getByRole('heading', { name: /corgi/i })).toBeDefined();
-    expect(screen.getByText(/herding/i)).toBeDefined();
+    expect(screen.getByText(/herding livestock/i)).toBeDefined();
     expect(screen.getByText(/12 - 14 years/i)).toBeDefined();
     expect(screen.getByText(/alert, affectionate, smart/i)).toBeDefined();
     expect(screen.getByText(/10 - 12 kg/i)).toBeDefined();
@@ -50,13 +69,54 @@ describe('BreedDetails', () => {
     expect(img.getAttribute('src')).toContain(mockBreed.reference_image_id);
   });
 
-  it('renders nothing if useLoaderData returns null', () => {
+  it('renders "Breed not found" if no breed data', () => {
     (
-      ReactRouterDom.useLoaderData as unknown as ReturnType<typeof vi.fn>
-    ).mockReturnValue(null);
+      DogQueries.useBreedDetails as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue({
+      data: null,
+      isLoading: false,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
 
     render(<BreedDetails />);
 
-    expect(screen.queryByRole('heading')).toBeNull();
+    expect(screen.getByText(/breed not found/i)).toBeDefined();
+  });
+
+  it('renders loader when loading', () => {
+    (
+      DogQueries.useBreedDetails as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue({
+      data: null,
+      isLoading: true,
+      isError: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+
+    render(<BreedDetails />);
+
+    expect(screen.getByTestId('loader-wrapper')).toBeDefined();
+  });
+
+  it('renders error component when error occurs', () => {
+    const error = new Error('Something went wrong');
+
+    (
+      DogQueries.useBreedDetails as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue({
+      data: null,
+      isLoading: false,
+      isError: true,
+      error,
+      refetch: vi.fn(),
+    });
+
+    render(<BreedDetails />);
+    expect(screen.getAllByText(/something went wrong/i).length).toBeGreaterThan(
+      0
+    );
   });
 });
