@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { SearchForm, Loader, BreedSection } from '@/components';
+import { SearchForm, Loader, BreedSection, Flyout } from '@/components';
 import DetailPanel from '@/components/DetailPanel/DetailPanel';
 
 import './HomeStyles.scss';
@@ -27,6 +27,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <SearchForm />
         <Suspense fallback={<Loader />}>
           <BreedSection />
+          <Flyout />
         </Suspense>
       </div>
       {hasDetails && <DetailPanel />}

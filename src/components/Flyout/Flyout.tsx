@@ -1,3 +1,5 @@
+'use client';
+
 import { useSelectionStore } from '@/stores/selectionStore';
 import { saveAs } from 'file-saver';
 import { createCSVContent } from '@/utils/csv';
