@@ -6,7 +6,6 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: './dist',
   images: {
     domains: ['cdn2.thedogapi.com'],
   },
