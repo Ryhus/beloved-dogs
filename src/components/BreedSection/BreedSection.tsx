@@ -7,7 +7,7 @@ import {
   Loader,
   ErrorComponent,
 } from '@/components';
-
+import { useEffect, useState } from 'react';
 import { useBreeds, useInvalidateBreeds } from '@/hooks/queries/dogQueries';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -15,11 +15,15 @@ import { useTranslations } from 'next-intl';
 export default function BreedSection() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
   const t = useTranslations('home');
   const page = Number(searchParams.get('page') || 1) - 1;
 
-  const searchTerm =
-    searchParams.get('breed') || localStorage.getItem('lastSearchTerm') || '';
+  useEffect(() => {
+    const stored = localStorage.getItem('lastSearchTerm') || '';
+    const param = searchParams.get('breed') || '';
+    setSearchTerm(param || stored);
+  }, [searchParams]);
 
   const {
     data: breeds = [],

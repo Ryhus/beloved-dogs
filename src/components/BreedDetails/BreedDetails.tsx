@@ -32,6 +32,8 @@ function BreedDetails() {
     <div className="breed-details">
       {breed?.reference_image_id && (
         <Image
+          width={300}
+          height={300}
           src={`https://cdn2.thedogapi.com/images/${breed.reference_image_id}.jpg`}
           alt={breed.name}
           className="breed-image"
