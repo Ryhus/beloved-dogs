@@ -1,69 +1,72 @@
-// import { useSearchParams } from 'react-router-dom';
-// import { useBreedDetails } from '@/hooks/queries/dogQueries';
+'use client';
 
-// import { Loader, ErrorComponent } from '@/components';
+import { useSearchParams } from 'next/navigation';
+import { useBreedDetails } from '@/hooks/queries/dogQueries';
 
-// import './BreedDetailsStyles.scss';
+import { Loader, ErrorComponent } from '@/components';
 
-// function BreedDetails() {
-//   const [searchParams] = useSearchParams();
-//   const breedId = searchParams.get('details');
+import './BreedDetailsStyles.scss';
 
-//   const {
-//     data: breed,
-//     isLoading,
-//     isError,
-//     error,
-//     refetch,
-//   } = useBreedDetails(breedId);
+function BreedDetails() {
+  const searchParams = useSearchParams();
 
-//   if (isLoading) return <Loader />;
-//   if (isError)
-//     return <ErrorComponent error={error as Error} onRetry={refetch} />;
-//   if (!breed) {
-//     return <div>Breed not found</div>;
-//   }
+  const breedId = searchParams.get('details');
 
-//   return (
-//     <div className="breed-details">
-//       {breed?.reference_image_id && (
-//         <img
-//           src={`https://cdn2.thedogapi.com/images/${breed.reference_image_id}.jpg`}
-//           alt={breed.name}
-//           className="breed-image"
-//         />
-//       )}
-//       <h2>{breed?.name}</h2>
+  const {
+    data: breed,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useBreedDetails(breedId);
 
-//       <div className="info-section">
-//         <h3>Basic Info</h3>
-//         <p>
-//           <strong>Bred for:</strong> {breed?.bred_for ?? 'N/A'}
-//         </p>
-//         <p>
-//           <strong>Breed group:</strong> {breed?.breed_group ?? 'N/A'}
-//         </p>
-//         <p>
-//           <strong>Life span:</strong> {breed?.life_span ?? 'N/A'}
-//         </p>
-//         <p>
-//           <strong>Temperament:</strong> {breed?.temperament ?? 'N/A'}
-//         </p>
-//       </div>
+  if (isLoading) return <Loader />;
+  if (isError)
+    return <ErrorComponent error={error as Error} onRetry={refetch} />;
+  if (!breed) {
+    return <div>Breed not found</div>;
+  }
 
-//       <div className="info-section">
-//         <h3>Physical Characteristics</h3>
-//         <p>
-//           <strong>Weight:</strong> {breed?.weight.metric} kg (
-//           {breed?.weight.imperial} lbs)
-//         </p>
-//         <p>
-//           <strong>Height:</strong> {breed?.height.metric} cm (
-//           {breed?.height.imperial} in)
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
+  return (
+    <div className="breed-details">
+      {breed?.reference_image_id && (
+        <img
+          src={`https://cdn2.thedogapi.com/images/${breed.reference_image_id}.jpg`}
+          alt={breed.name}
+          className="breed-image"
+        />
+      )}
+      <h2>{breed?.name}</h2>
 
-// export default BreedDetails;
+      <div className="info-section">
+        <h3>Basic Info</h3>
+        <p>
+          <strong>Bred for:</strong> {breed?.bred_for ?? 'N/A'}
+        </p>
+        <p>
+          <strong>Breed group:</strong> {breed?.breed_group ?? 'N/A'}
+        </p>
+        <p>
+          <strong>Life span:</strong> {breed?.life_span ?? 'N/A'}
+        </p>
+        <p>
+          <strong>Temperament:</strong> {breed?.temperament ?? 'N/A'}
+        </p>
+      </div>
+
+      <div className="info-section">
+        <h3>Physical Characteristics</h3>
+        <p>
+          <strong>Weight:</strong> {breed?.weight.metric} kg (
+          {breed?.weight.imperial} lbs)
+        </p>
+        <p>
+          <strong>Height:</strong> {breed?.height.metric} cm (
+          {breed?.height.imperial} in)
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default BreedDetails;

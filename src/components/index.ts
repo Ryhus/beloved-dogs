@@ -1,5 +1,5 @@
 export * from './BreedCard';
-// export * from './BreedDetails';
+export * from './BreedDetails';
 export * from './BreedList';
 export * from './Flyout';
 export * from './Header';

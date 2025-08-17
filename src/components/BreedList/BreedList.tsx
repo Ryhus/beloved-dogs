@@ -7,22 +7,17 @@ import './BreedListStyles.scss';
 
 interface BreedListProps {
   breeds: BreedInfo[];
-  breedId: number;
+  onCardClick: (id: number) => void;
 }
 
-function BreedList({ breeds, breedId }: BreedListProps) {
-  // const handleCardClick = (breedId: number) => {
-  //   searchParams.append('details', breedId.toString());
-  //   setSearchParams(searchParams);
-  // };
-
+function BreedList({ breeds, onCardClick }: BreedListProps) {
   return (
     <section className="breed-list">
       {breeds.map((breed) => (
         <BreedCard
           key={breed.id}
           breed={breed}
-          onClick={() => console.log(breedId)}
+          onClick={() => onCardClick(breed.id)}
         />
       ))}
     </section>

@@ -13,16 +13,20 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
+  details: React.ReactNode;
 }
 
-async function RootLayout({ children }: RootLayoutProps) {
+async function RootLayout({ children, details }: RootLayoutProps) {
   return (
     <html lang="en" data-theme="light">
       <body>
         <div id="root">
           <ThemeProvider>
             <Header />
-            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <ReactQueryProvider>
+              {children}
+              {details}
+            </ReactQueryProvider>
           </ThemeProvider>
         </div>
       </body>

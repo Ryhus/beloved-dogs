@@ -7,10 +7,12 @@ import {
   Loader,
   ErrorComponent,
 } from '@/components';
+
 import { useBreeds, useInvalidateBreeds } from '@/hooks/queries/dogQueries';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function BreedSection() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const page = Number(searchParams.get('page') || 1) - 1;
@@ -35,12 +37,18 @@ export default function BreedSection() {
 
   if (breeds.length === 0) return <NoResultsPlaceholder />;
 
+  const handleCardClick = (breedId: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('details', breedId.toString());
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <>
       <button onClick={invalidateBreeds} className="refresh-btn">
         {isFetching && !isLoading ? <span className="spinner" /> : '🔄 Refresh'}
       </button>
-      <BreedList breeds={breeds} breedId={1} />
+      <BreedList breeds={breeds} onCardClick={handleCardClick} />
       {!searchTerm && (
         <Pagination itemsOnCurrentPage={breeds.length} currentPage={page} />
       )}
