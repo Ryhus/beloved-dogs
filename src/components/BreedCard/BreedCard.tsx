@@ -20,7 +20,12 @@ function BreedCard({ breed, onClick }: BreedProps) {
   return (
     <div className="breed-card-container">
       <article className="breed-card" onClick={onClick}>
-        <Image src={breed.image?.url || ''} alt={breed.name} />
+        <Image
+          src={breed.image?.url || ''}
+          alt={breed.name}
+          width={300}
+          height={300}
+        />
         <h2>{breed.name}</h2>
       </article>
       <input

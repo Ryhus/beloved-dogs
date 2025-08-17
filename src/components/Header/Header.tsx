@@ -1,21 +1,26 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { SwitchThemeBttn } from './SwitchThemeBttn/SwitchThemeBttn';
+import LangSwitcher from './LangSwitcher/LangSwitcher';
 
 import './HeaderStyles.scss';
 
 function Header() {
+  const t = useTranslations('home');
+
   return (
     <header className="site-header">
       <div className="logo">
-        <Link href="/">🐶 BelovedDogs</Link>
+        <Link href="/">{t('tittle')}</Link>
       </div>
 
       <nav className="nav-links">
+        <LangSwitcher />
         <SwitchThemeBttn />
-        <Link href="/">Home</Link>
-        <Link href="/about">About</Link>
+        <Link href="/">{t('home')}</Link>
+        <Link href="/about">{t('about')}</Link>
       </nav>
     </header>
   );

@@ -25,6 +25,11 @@
     ],
     "strictNullChecks": true
   },
-  "include": ["src", "./dist/types/**/*.ts", "./next-env.d.ts"],
+  "include": [
+    "src",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    "src/middlware.ts"
+  ],
   "exclude": ["./node_modules"]
 }

@@ -1,5 +1,5 @@
 'use client';
-
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useSearchParams, usePathname } from 'next/navigation';
 
@@ -19,7 +19,7 @@ function Pagination({
 }: PaginationProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
+  const t = useTranslations('home');
   const isFirstPage = currentPage === 0;
   const isLastPage = itemsOnCurrentPage < itemsPerPage;
 
@@ -39,7 +39,7 @@ function Pagination({
             aria-disabled={isFirstPage}
             onClick={(e) => isFirstPage && e.preventDefault()}
           >
-            Prev
+            {t('prev')}
           </Link>
         </li>
 
@@ -50,7 +50,7 @@ function Pagination({
             aria-disabled={isLastPage}
             onClick={(e) => isLastPage && e.preventDefault()}
           >
-            Next
+            {t('next')}
           </Link>
         </li>
       </ul>

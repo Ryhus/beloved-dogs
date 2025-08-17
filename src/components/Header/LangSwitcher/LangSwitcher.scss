@@ -1,0 +1,37 @@
+.language-switcher {
+  position: relative;
+  display: inline-block;
+
+  .language-dropdown {
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #888;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #0070f3;
+      box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+    }
+  }
+
+  .language-dropdown::-ms-expand {
+    display: none;
+  }
+
+  select option {
+    font-weight: normal;
+    color: #333;
+    background-color: #fff;
+  }
+}

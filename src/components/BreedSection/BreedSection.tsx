@@ -10,11 +10,12 @@ import {
 
 import { useBreeds, useInvalidateBreeds } from '@/hooks/queries/dogQueries';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function BreedSection() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const t = useTranslations('home');
   const page = Number(searchParams.get('page') || 1) - 1;
 
   const searchTerm =
@@ -46,7 +47,7 @@ export default function BreedSection() {
   return (
     <>
       <button onClick={invalidateBreeds} className="refresh-btn">
-        {isFetching && !isLoading ? <span className="spinner" /> : '🔄 Refresh'}
+        {isFetching && !isLoading ? <span className="spinner" /> : t('refresh')}
       </button>
       <BreedList breeds={breeds} onCardClick={handleCardClick} />
       {!searchTerm && (

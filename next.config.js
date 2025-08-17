@@ -1,10 +1,11 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
-  // output: 'export',
   distDir: './dist',
   images: {
     domains: ['cdn2.thedogapi.com'],
@@ -17,6 +18,15 @@ const nextConfig = {
     config.resolve.alias['@'] = path.resolve(__dirname, 'src');
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/en/',
+        permanent: false,
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

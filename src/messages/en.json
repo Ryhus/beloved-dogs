@@ -1,0 +1,19 @@
+{
+  "home": {
+    "tittle": "🐶 BelovedDogs",
+    "tip": "Looking for your favorite dog breed? 🐶Try searching for {dog1} or {dog2}!",
+    "home": "Home",
+    "about": "About",
+    "prev": "Prev",
+    "next": "Next",
+    "unselect": "Unselect all",
+    "download": "Download",
+    "refresh": "🔄 Refresh",
+    "search": "Search"
+  },
+
+  "about": {
+    "me": "I am a {dataScientist} and {softwareEngineer} with a passion for {ml}, {quantFinance}, and creating things that work beautifully — whether it is a predictive model or a full-stack web app.",
+    "school": "Powered by RS School 🏫"
+  }
+}

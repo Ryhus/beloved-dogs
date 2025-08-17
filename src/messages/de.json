@@ -1,0 +1,19 @@
+{
+  "home": {
+    "tittle": "🐶 BeliebteHunde",
+    "tip": "Suchen Sie nach Ihrer Lieblingshunderasse? 🐶Versuchen Sie, nach {dog1} oder {dog2} zu suchen!",
+    "home": "Startseite",
+    "about": "Über",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "unselect": "Alles abwählen",
+    "download": "Herunterladen",
+    "refresh": "🔄 Auffrischen",
+    "search": "Suchen"
+  },
+
+  "about": {
+    "me": "Ich bin {dataScientist} und {softwareEngineer} mit einer Leidenschaft für {ml}, {quantFinance} und das Erstellen von Dingen, die schön funktionieren — sei es ein Vorhersagemodell oder eine Full-Stack-Webanwendung.",
+    "school": "Unterstützt von RS School 🏫"
+  }
+}

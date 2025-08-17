@@ -2,6 +2,7 @@
 
 import { type ChangeEvent, useState } from 'react';
 
+import { useTranslations } from 'next-intl';
 import { PopUpMessage } from '@/components';
 import { usePersistedSearchQuery } from '@/hooks/usePersistentSearchQuery';
 
@@ -10,6 +11,7 @@ import './SearchFormStyles.scss';
 function SearchForm() {
   const [query, setQuery] = usePersistedSearchQuery();
   const [error, setError] = useState('');
+  const t = useTranslations('home');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -28,7 +30,7 @@ function SearchForm() {
         &times;
       </button>
       <button type="submit" className="submit-btn">
-        Search
+        {t('search')}
       </button>
       {error && <PopUpMessage message={error} onClose={() => setError('')} />}
     </form>
