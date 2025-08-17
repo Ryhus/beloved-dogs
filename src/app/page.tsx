@@ -4,20 +4,7 @@ import { SearchForm, Loader, BreedSection } from '@/components';
 
 import './HomeStyles.scss';
 
-interface HomeProps {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-  const sParams = await searchParams;
-
-  const page = Number(sParams?.page || 1) - 1;
-
-  console.log(page);
-
+export default function Home() {
   return (
     <div className="home-page-container">
       <h1 className="search-hint">
@@ -27,7 +14,7 @@ export default async function Home({ searchParams }: HomeProps) {
       </h1>
       <SearchForm />
       <Suspense fallback={<Loader />}>
-        <BreedSection page={page}></BreedSection>
+        <BreedSection />
       </Suspense>
     </div>
   );

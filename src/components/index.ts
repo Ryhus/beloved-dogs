@@ -10,3 +10,4 @@ export * from './PopUpMessage';
 export * from './SearchForm';
 export * from './Errors';
 export * from './BreedSection';
+export * from './ClientWrappers';

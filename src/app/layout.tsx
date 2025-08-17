@@ -1,3 +1,4 @@
+import { ReactQueryProvider } from '@/components';
 import { ThemeProvider } from '@/contexts';
 import { Header } from '@/components';
 
@@ -21,7 +22,7 @@ async function RootLayout({ children }: RootLayoutProps) {
         <div id="root">
           <ThemeProvider>
             <Header />
-            {children}
+            <ReactQueryProvider>{children}</ReactQueryProvider>
           </ThemeProvider>
         </div>
       </body>
