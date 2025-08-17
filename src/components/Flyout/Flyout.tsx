@@ -2,33 +2,33 @@
 
 import { useSelectionStore } from '@/stores/selectionStore';
 import { saveAs } from 'file-saver';
-import { createCSVContent } from '@/utils/csv';
 
 import './FlyoutStyles.scss';
 
 function Flyout() {
   const { selectedList, clearSelection } = useSelectionStore();
-
   const breedList = selectedList();
 
   if (breedList.length === 0) return null;
 
-  const handleDownload = () => {
-    const csvRows = [
-      ['Name', 'Origin', 'Bredd_for', 'Life_span', 'URL'],
-      ...breedList.map((breed) => [
-        breed.name ?? 'N/A',
-        breed.origin ?? 'N/A',
-        breed.bred_for ?? 'N/A',
-        breed.life_span ?? 'N/A',
-        `https://beloved-dogs.netlify.app/?details=${breed.id}`,
-      ]),
-    ];
+  const handleDownload = async () => {
+    try {
+      const response = await fetch('/api/download-csv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ breeds: breedList }),
+      });
 
-    const csvContent = createCSVContent(csvRows);
+      if (!response.ok) {
+        console.error('Failed to generate CSV');
+        return;
+      }
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `${breedList.length}_items.csv`);
+      const blob = await response.blob();
+      saveAs(blob, `${breedList.length}_items.csv`);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+    }
   };
 
   return (
