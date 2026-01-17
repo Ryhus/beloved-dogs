@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import BreedCard from '../BreedCard/BreedCard';
 import type { Breed } from '../../Services/DogService/types';
 
@@ -6,18 +5,21 @@ import './BreedListStyles.scss';
 
 interface BreedListProps {
   breeds: Breed[];
+  onCardClick: (id: string) => void;
 }
 
-class BreedList extends Component<BreedListProps> {
-  render(): React.ReactNode {
-    return (
-      <section className="breed-list">
-        {this.props.breeds.map((breed) => (
-          <BreedCard key={breed.id} breed={breed} />
-        ))}
-      </section>
-    );
-  }
+function BreedList({ breeds, onCardClick }: BreedListProps) {
+  return (
+    <section className="breed-list">
+      {breeds.map((breed) => (
+        <BreedCard
+          key={breed.id}
+          breed={breed}
+          onClick={() => onCardClick(breed.id ?? '1')}
+        />
+      ))}
+    </section>
+  );
 }
 
 export default BreedList;

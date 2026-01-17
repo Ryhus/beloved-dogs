@@ -9,13 +9,14 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format:fix": "prettier --write .",
-    "prepare": "husky",
+    "prefopare": "husky",
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-router-dom": "7.7.1"
   },
   "devDependencies": {
     "@eslint/js": "9.30.1",

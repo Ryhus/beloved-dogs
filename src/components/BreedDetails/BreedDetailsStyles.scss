@@ -1,0 +1,115 @@
+.breed-details {
+  max-width: 650px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+  }
+
+  .breed-image {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    border-radius: 16px;
+    margin: 0 auto 1.5rem;
+    display: block;
+    box-shadow: 0 4px 16px rgba(209, 123, 15, 0.4);
+    object-fit: cover;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #d17b0f;
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px #f5deb3;
+  }
+
+  .info-section {
+    background: #faf3e0;
+    padding: 1.25rem 1.5rem;
+    margin-top: 2rem;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(209, 123, 15, 0.15);
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #b46000;
+      border-bottom: 2px solid #d17b0f;
+      padding-bottom: 0.4rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      margin: 0.5rem 0;
+      line-height: 1.5;
+      color: #4a4a4a;
+
+      strong {
+        color: #7f5a00;
+        font-weight: 600;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 1rem;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .breed-image {
+      max-width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .info-section {
+      padding: 1rem;
+      margin-top: 1.5rem;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.75rem;
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    .info-section {
+      padding: 0.8rem;
+
+      h3 {
+        font-size: 1.1rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
