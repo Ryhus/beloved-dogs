@@ -9,3 +9,4 @@ export * from './NoResultsPlaceholder';
 export * from './Pagination';
 export * from './PopUpMessage';
 export * from './SearchForm';
+export * from './Errors';

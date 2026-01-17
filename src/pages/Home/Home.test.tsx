@@ -1,208 +1,164 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  useLoaderData,
-  useNavigation,
-  useSearchParams,
-} from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useBreeds, useInvalidateBreeds } from '@/hooks/queries/dogQueries';
 import Home from './Home';
 
-interface AllBreedsLoaderData {
-  breeds: { id: number }[];
-  isSearch: boolean;
-  currentPage: number;
-}
-
-vi.mock('../../components/SearchForm/SearchForm', () => ({
-  default: () => <div data-testid="search-form" />,
-}));
-vi.mock('../../components/BreedList/BreedList', () => ({
-  default: (props: {
+vi.mock('@/components', () => ({
+  SearchForm: () => <div data-testid="search-form" />,
+  BreedList: ({
+    breeds,
+    onCardClick,
+  }: {
     breeds: { id: number }[];
     onCardClick: (id: number) => void;
   }) => (
     <div data-testid="breed-list">
-      Breeds: {props.breeds.length}
-      <button onClick={() => props.onCardClick(123)}>Select Breed 123</button>
+      Breeds: {breeds.length}
+      <button onClick={() => onCardClick(123)}>Select Breed</button>
     </div>
   ),
-}));
-vi.mock('../../components/Pagination/Pagination', () => ({
-  default: (props: { currentPage: number; itemsOnCurrentPage: number }) => (
+  Pagination: ({
+    currentPage,
+    itemsOnCurrentPage,
+  }: {
+    currentPage: number;
+    itemsOnCurrentPage: number;
+  }) => (
     <div data-testid="pagination">
-      Page: {props.currentPage}, Items: {props.itemsOnCurrentPage}
+      Page: {currentPage}, Items: {itemsOnCurrentPage}
     </div>
   ),
-}));
-vi.mock('../../components/NoResultsPlaceholder/NoResultsPlaceholder', () => ({
-  default: () => <div data-testid="no-results" />,
-}));
-vi.mock('../../components/Loader/Loader', () => ({
-  default: () => <div data-testid="loader" />,
-}));
-vi.mock('@/components/Flyout/Flyout', () => ({
-  default: () => <div data-testid="flyout" />,
+  NoResultsPlaceholder: () => <div data-testid="no-results" />,
+  Loader: () => <div data-testid="loader" />,
+  Flyout: () => <div data-testid="flyout" />,
+  ErrorComponent: ({ onRetry }: { error: Error; onRetry: () => void }) => (
+    <div data-testid="error">
+      Error!
+      <button onClick={onRetry}>Retry</button>
+    </div>
+  ),
 }));
 
-vi.mock('react-router-dom', () => {
-  return {
-    useLoaderData: vi.fn(),
-    useNavigation: vi.fn(),
-    useSearchParams: vi.fn(),
-    Outlet: () => <div data-testid="outlet" />,
-  };
-});
+vi.mock('@/hooks/queries/dogQueries', () => ({
+  useBreeds: vi.fn(),
+  useInvalidateBreeds: vi.fn(),
+}));
+
+vi.mock('react-router-dom', () => ({
+  useSearchParams: vi.fn(),
+  Outlet: () => <div data-testid="outlet" />,
+}));
 
 describe('Home component', () => {
   let setSearchParamsMock: ReturnType<typeof vi.fn>;
   let searchParams: URLSearchParams;
 
+  const mockUseBreeds = vi.mocked(useBreeds);
+  const mockInvalidateBreeds = vi.mocked(useInvalidateBreeds);
+  const mockUseSearchParams = useSearchParams as unknown as ReturnType<
+    typeof vi.fn
+  >;
+
   beforeEach(() => {
     setSearchParamsMock = vi.fn();
     searchParams = new URLSearchParams();
-
-    (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue([
-      searchParams,
-      setSearchParamsMock,
-    ]);
+    mockUseSearchParams.mockReturnValue([searchParams, setSearchParamsMock]);
+    mockInvalidateBreeds.mockReturnValue(vi.fn());
   });
 
-  it('shows loader in master when loading and no detailId', () => {
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [],
-      isSearch: false,
-      currentPage: 1,
+  const mockBreedsData = (overrides = {}) => {
+    const base = {
+      data: [],
+      isLoading: false,
+      isError: false,
+      error: null,
+      isFetching: false,
+      refetch: vi.fn(),
     };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'loading',
-    });
+    mockUseBreeds.mockReturnValue({
+      ...base,
+      ...overrides,
+    } as unknown as ReturnType<typeof useBreeds>);
+  };
 
+  it('renders loader when loading and no detailId', () => {
+    mockBreedsData({ isLoading: true });
     render(<Home />);
-
-    expect(screen.getByTestId('loader')).toBeDefined();
-    expect(screen.queryByTestId('no-results')).toBeNull();
-    expect(screen.queryByTestId('breed-list')).toBeNull();
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    expect(screen.queryByTestId('breed-list')).not.toBeInTheDocument();
   });
 
-  it('shows NoResultsPlaceholder if no breeds and not loading', () => {
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [],
-      isSearch: false,
-      currentPage: 1,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
+  it('renders error state', () => {
+    const retryMock = vi.fn();
+    mockBreedsData({
+      isError: true,
+      error: new Error('Test error'),
+      refetch: retryMock,
     });
-
     render(<Home />);
-
-    expect(screen.getByTestId('no-results')).toBeDefined();
+    expect(screen.getByTestId('error')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Retry'));
+    expect(retryMock).toHaveBeenCalled();
   });
 
-  it('shows BreedList and Pagination when breeds exist and not search', () => {
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [{ id: 1 }, { id: 2 }],
-      isSearch: false,
-      currentPage: 2,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
-    });
-
+  it('renders no results placeholder when no breeds', () => {
+    mockBreedsData({ data: [] });
     render(<Home />);
+    expect(screen.getByTestId('no-results')).toBeInTheDocument();
+  });
 
+  it('renders breeds list and pagination when breeds exist and no search term', () => {
+    mockBreedsData({ data: [{ id: 1 }, { id: 2 }] });
+    render(<Home />);
     expect(screen.getByTestId('breed-list')).toHaveTextContent('Breeds: 2');
-    expect(screen.getByTestId('pagination')).toHaveTextContent('Page: 2');
+    expect(screen.getByTestId('pagination')).toBeInTheDocument();
   });
 
-  it('does not show Pagination if isSearch is true', () => {
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [{ id: 1 }],
-      isSearch: true,
-      currentPage: 1,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
-    });
-
+  it('hides pagination when search term exists', () => {
+    searchParams.set('breed', 'beagle');
+    mockBreedsData({ data: [{ id: 1 }] });
     render(<Home />);
-
-    expect(screen.getByTestId('breed-list')).toBeDefined();
-    expect(screen.queryByTestId('pagination')).toBeNull();
+    expect(screen.getByTestId('breed-list')).toBeInTheDocument();
+    expect(screen.queryByTestId('pagination')).not.toBeInTheDocument();
   });
 
-  it('shows detail panel with close button and Outlet when detailId present and not loading', () => {
+  it('opens detail panel when detailId is present', () => {
     searchParams.set('details', '123');
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [{ id: 1 }],
-      isSearch: false,
-      currentPage: 1,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
-    });
-
+    mockBreedsData({ data: [{ id: 1 }] });
     render(<Home />);
-
-    expect(screen.getByText('×')).toBeDefined();
-    expect(screen.getByTestId('outlet')).toBeDefined();
+    expect(screen.getByTestId('outlet')).toBeInTheDocument();
+    expect(screen.getByText('×')).toBeInTheDocument();
   });
 
-  it('clicking close button removes detailId from searchParams', () => {
+  it('removes detailId from params when close button is clicked', () => {
     searchParams.set('details', '123');
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [{ id: 1 }],
-      isSearch: false,
-      currentPage: 1,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
-    });
-
+    mockBreedsData({ data: [{ id: 1 }] });
     render(<Home />);
-
     fireEvent.click(screen.getByText('×'));
-
     expect(setSearchParamsMock).toHaveBeenCalled();
-
-    const calledParams = setSearchParamsMock.mock
-      .calls[0][0] as URLSearchParams;
-    expect(calledParams.get('details')).toBeNull();
+    const params = setSearchParamsMock.mock.calls[0][0] as URLSearchParams;
+    expect(params.get('details')).toBeNull();
   });
 
-  it('always renders Flyout component', () => {
-    const loaderData: AllBreedsLoaderData = {
-      breeds: [],
-      isSearch: false,
-      currentPage: 1,
-    };
-    (useLoaderData as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      loaderData
-    );
-    (useNavigation as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      state: 'idle',
-    });
-
+  it('calls invalidateBreeds when refresh button is clicked', () => {
+    const invalidateMock = vi.fn();
+    mockInvalidateBreeds.mockReturnValue(invalidateMock);
+    mockBreedsData();
     render(<Home />);
+    fireEvent.click(screen.getByText('🔄 Refresh'));
+    expect(invalidateMock).toHaveBeenCalled();
+  });
 
-    expect(screen.getByTestId('flyout')).toBeDefined();
+  it('shows spinner in refresh button when fetching but not loading', () => {
+    mockBreedsData({ isFetching: true, isLoading: false });
+    render(<Home />);
+    expect(screen.getByText('', { selector: '.spinner' })).toBeInTheDocument();
+  });
+
+  it('always renders Flyout', () => {
+    mockBreedsData();
+    render(<Home />);
+    expect(screen.getByTestId('flyout')).toBeInTheDocument();
   });
 });

@@ -6,12 +6,6 @@ import MainLayout from '@/Layouts/MainLayout/MainLayout';
 
 import { BreedDetails } from '@/components';
 
-import {
-  allBreedsLoader,
-  breedDetailsLoader,
-  revalidateHomeRoute,
-} from './DataHandlers/Home/HomeLoaders';
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -21,13 +15,11 @@ const router = createBrowserRouter([
       {
         path: '',
         Component: Home,
-        loader: allBreedsLoader,
-        shouldRevalidate: revalidateHomeRoute,
+
         children: [
           {
             path: '',
             Component: BreedDetails,
-            loader: breedDetailsLoader,
           },
         ],
       },
