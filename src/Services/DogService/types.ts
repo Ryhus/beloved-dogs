@@ -60,3 +60,30 @@ export interface BreedInfo {
 }
 
 export type SearchBreedResponse = Breed[];
+
+export interface ImageResponse {
+  id: string;
+  url: string;
+  width: number;
+  height: number;
+  breeds: Breed[];
+  categories: [];
+}
+
+export type SearchImageResponse = ImageResponse[];
+
+export interface SearchImageParams {
+  breed_id?: number;
+  limit?: number;
+  page?: number;
+  order?: 'ASC' | 'DESC' | 'RANDOM';
+  species_id?: string;
+  breed_groups?: string;
+  exclude_breed_groups?: string;
+  lang?: string;
+  has_breeds?: boolean;
+  include_breeds?: boolean;
+  include_categories?: boolean;
+  account_id?: string;
+  sub_id?: string;
+}
