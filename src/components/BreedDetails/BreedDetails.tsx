@@ -1,13 +1,15 @@
 import { useSearchParams } from 'react-router-dom';
-import { useBreedDetails } from '@/hooks/queries/dogQueries';
+import { useBreedDetails, useSearchImage } from '@/hooks/queries/dogQueries';
 
 import { Loader, ErrorComponent } from '@/components';
+import fallbackImage from '@/assets/fallback_dog.webp';
 
 import './BreedDetailsStyles.scss';
 
 function BreedDetails() {
   const [searchParams] = useSearchParams();
-  const breedId = searchParams.get('details');
+  const breedIdParam = searchParams.get('details');
+  const breedId = breedIdParam ? Number(breedIdParam) : undefined;
 
   const {
     data: breed,
@@ -16,6 +18,8 @@ function BreedDetails() {
     error,
     refetch,
   } = useBreedDetails(breedId);
+
+  const { data: images = [] } = useSearchImage(breedId);
 
   if (isLoading) return <Loader />;
   if (isError)
@@ -26,9 +30,12 @@ function BreedDetails() {
 
   return (
     <div className="breed-details">
-      {breed?.reference_image_id && (
-        <img src={breed.image?.url} alt={breed.name} className="breed-image" />
-      )}
+      <img
+        src={images[0]?.url || fallbackImage}
+        alt={breed.name}
+        className="breed-image"
+      />
+
       <h2>{breed?.name}</h2>
 
       <div className="info-section">

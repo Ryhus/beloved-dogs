@@ -4,9 +4,13 @@ import {
   getAllBreeds,
   searchBreeds,
   getBreedById,
+  searchImage,
 } from '@/Services/DogService/DogService';
 
-import type { BreedInfo } from '@/Services/DogService/types';
+import type {
+  BreedInfo,
+  SearchImageResponse,
+} from '@/Services/DogService/types';
 
 const ITEMS_ON_PAGE = 10;
 
@@ -24,11 +28,19 @@ export function useBreeds(page: number, searchTerm: string) {
   });
 }
 
-export function useBreedDetails(breedId: string | null) {
-  return useQuery<BreedInfo | null>({
+export function useBreedDetails(breedId: number | undefined) {
+  return useQuery<BreedInfo>({
     queryKey: ['breed', breedId],
-    queryFn: () => (breedId ? getBreedById(breedId) : Promise.resolve(null)),
-    enabled: !!breedId,
+    queryFn: async () => getBreedById(breedId),
+    enabled: breedId != null,
+  });
+}
+
+export function useSearchImage(breed_id: number | undefined) {
+  return useQuery<SearchImageResponse>({
+    queryKey: ['image', breed_id],
+    queryFn: async () => searchImage({ breed_id }),
+    enabled: breed_id != null,
   });
 }
 

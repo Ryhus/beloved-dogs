@@ -1,6 +1,10 @@
 import apiClient from './apiClient';
 
-import type { BreedInfo } from './types';
+import type {
+  BreedInfo,
+  SearchImageResponse,
+  SearchImageParams,
+} from './types';
 
 export async function getAllBreeds(limit: number = 10, page: number = 0) {
   const response = await apiClient.get<BreedInfo[]>(`/breeds`, {
@@ -16,7 +20,15 @@ export async function searchBreeds(q: string) {
   return response.data;
 }
 
-export async function getBreedById(breedId: string) {
+export async function getBreedById(breedId: number | undefined) {
   const response = await apiClient.get<BreedInfo>(`/breeds/` + breedId);
+  return response.data;
+}
+
+export async function searchImage(params: SearchImageParams) {
+  const response = await apiClient.get<SearchImageResponse>(`/images/search`, {
+    params,
+  });
+
   return response.data;
 }

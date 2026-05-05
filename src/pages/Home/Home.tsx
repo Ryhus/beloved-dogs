@@ -32,7 +32,6 @@ function Home() {
   } = useBreeds(page, searchTerm);
 
   const invalidateBreeds = useInvalidateBreeds();
-  console.log(isFetching);
 
   const handleCardClick = (breedId: number) => {
     searchParams.append('details', breedId.toString());
